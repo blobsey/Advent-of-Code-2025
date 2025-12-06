@@ -1,6 +1,6 @@
-import gleam/io
+import simplifile
 
-pub fn main() -> Nil {
-  io.println("blob was here")
-  Nil
+pub fn main() {
+  let assert Ok(content) = simplifile.read("input/day00.txt")
+  echo content
 }

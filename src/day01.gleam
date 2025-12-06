@@ -55,8 +55,8 @@ fn part_two(instructions: List(Instruction)) -> Nil {
         Left -> {
           // Left: divide, but first convert dial pos to if left was positive
           // also mod by dial_max to pretend that 100 is 0
-          let dial_pos_flipped = {dial_max - dial.pos} % dial_max
-          {dial_pos_flipped + instruction.distance} / dial_max
+          let dial_pos_flipped = { dial_max - dial.pos } % dial_max
+          { dial_pos_flipped + instruction.distance } / dial_max
         }
       }
       Dial(pos: new_pos, zero_count: dial.zero_count + passed_zero_count)
