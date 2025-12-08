@@ -43,7 +43,8 @@ fn process(state: State) -> State {
       True -> {
         let left = Coord(..stepped_coord, j: stepped_coord.j - 1)
         let right = Coord(..stepped_coord, j: stepped_coord.j + 1)
-        let in_bounds = [left, right]
+        let in_bounds =
+          [left, right]
           |> list.filter(is_in_bound(_, prev_state.max_i, prev_state.max_j))
         let exited = { 2 - list.length(in_bounds) } * timeline_count
 
