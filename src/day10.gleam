@@ -1,29 +1,29 @@
-import gleam/io
-import gleam/set
 import gleam/int
+import gleam/io
 import gleam/list
 import gleam/option
 import gleam/regexp
+import gleam/set
 import gleam/string
 import simplifile
 
 type Machine {
-  Machine(
-    lights_target: Int,
-    buttons: List(Int),
-    joltages: List(Int),
-  )
+  Machine(lights_target: Int, buttons: List(Int), joltages: List(Int))
 }
 
-fn part_one_process(machine: Machine, current_states: set.Set(Int), visited: set.Set(Int)) -> Int {
+fn part_one_process(
+  machine: Machine,
+  current_states: set.Set(Int),
+  visited: set.Set(Int),
+) -> Int {
   case set.contains(current_states, machine.lights_target) {
     // Found solution
     True -> 0
     False -> {
-      let next_states = 
-        current_states 
+      let next_states =
+        current_states
         |> set.to_list
-        |> list.flat_map(fn (state) {
+        |> list.flat_map(fn(state) {
           machine.buttons
           // XOR each button with state "presses" it
           |> list.map(int.bitwise_exclusive_or(_, state))
@@ -58,7 +58,7 @@ pub fn main() {
     |> list.map(fn(line) {
       let lights_matches = regexp.scan(lights_regex, line)
       let button_matches = regexp.scan(buttons_regex, line)
-      let joltages_matches = regexp.scan(joltages_regex, line)
+      let _joltages_matches = regexp.scan(joltages_regex, line)
 
       let assert [regexp.Match(submatches: [option.Some(lights_str)], ..)] =
         lights_matches
@@ -76,21 +76,22 @@ pub fn main() {
         |> string.join("")
         |> int.base_parse(2)
 
-      let buttons = 
+      let buttons =
         button_matches
-        |> list.map(fn (match) {
-          let assert regexp.Match(submatches: [option.Some(button_str)], ..) = match
+        |> list.map(fn(match) {
+          let assert regexp.Match(submatches: [option.Some(button_str)], ..) =
+            match
 
           let assert Ok(nums) =
             button_str
             |> string.split(",")
             |> list.try_map(int.parse)
-            
+
           let nums_set = nums |> set.from_list
-          
-          let assert Ok(bits) = 
+
+          let assert Ok(bits) =
             list.range(0, string.length(lights_str) - 1)
-            |> list.map(fn (i) {
+            |> list.map(fn(i) {
               case set.contains(in: nums_set, this: i) {
                 True -> "1"
                 False -> "0"
@@ -101,8 +102,12 @@ pub fn main() {
 
           bits
         })
-        
-        Machine(lights_target: lights_target, buttons: buttons, joltages: list.new())
+
+      Machine(
+        lights_target: lights_target,
+        buttons: buttons,
+        joltages: list.new(),
+      )
     })
 
   io.println("Part 1 Answer: " <> int.to_string(part_one(machines)))
