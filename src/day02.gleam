@@ -1,4 +1,5 @@
 import gleam/bool
+import gleam/float
 import gleam/int
 import gleam/io
 import gleam/list
@@ -23,6 +24,17 @@ fn pow10(exp: Int) -> Int {
     exp if exp < 0 -> panic as "Negative exponents not supported"
     _ -> 10 * pow10(exp - 1)
   }
+}
+
+fn repeat_digits(n: Int, num_repeats: Int) -> Int {
+  let d = count_digits(n)
+  let base = pow10(d)
+  // 10^d
+
+  // (10^(d*k) - 1) / (10^d - 1)
+  let multiplier = { pow10(d * num_repeats) - 1 } / { base - 1 }
+
+  n * multiplier
 }
 
 /// Generate invalid ID from a "base number" ex. 123 -> 123123
@@ -77,13 +89,86 @@ fn part_one(ranges: List(Range)) {
   |> int.sum
 }
 
-// fn get_invalid_ids_part_two(range) {
+fn normalize_ranges(ranges: List(Range)) -> List(Range) {
+  ranges
+  |> list.fold([], fn(acc, range) {
+    let digits_lower = count_digits(range.lower)
+    let digits_upper = count_digits(range.upper)
 
-// }
+    case digits_lower == digits_upper {
+      True -> [range, ..acc]
+      False -> {
+        let first = Range(range.lower, pow10(digits_lower) - 1)
+        let last = Range(pow10(digits_upper - 1), range.upper)
 
-// fn part_two(ranges: List(Range)) {
+        use <- bool.guard(digits_upper - digits_lower == 1, [last, first, ..acc])
 
-// }
+        let middles =
+          list.range(digits_lower + 1, digits_upper - 1)
+          |> list.map(fn(magnitude) {
+            Range(pow10(magnitude), pow10(magnitude + 1) - 1)
+          })
+
+        [[first], middles, [last], acc] |> list.flatten
+      }
+    }
+  })
+  |> list.unique
+}
+
+fn get_invalid_ids_part_two(normalized_range: Range) {
+  let len = count_digits(normalized_range.upper)
+  let assert Ok(sqrt) = int.square_root(len)
+
+  let substr_lens: List(Int) =
+    sqrt
+    |> float.truncate
+    |> list.range(from: 1, to: _)
+    |> list.fold([], fn(acc, num) {
+      case len % num == 0 {
+        False -> acc
+        True -> {
+          let second = len / num
+          let new_acc = case num <= len / 2 {
+            True -> [num, ..acc]
+            False -> acc
+          }
+          case second <= len / 2 {
+            True -> [second, ..new_acc]
+            False -> new_acc
+          }
+        }
+      }
+    })
+
+  substr_lens
+  |> list.flat_map(fn(substr_len) {
+    let start = normalized_range.lower / { pow10(len - substr_len) }
+    let end = normalized_range.upper / { pow10(len - substr_len) }
+    let num_repeats = len / substr_len
+    list.range(start, end)
+    |> list.fold_until([], fn(acc, prefix) {
+      let invalid_id = repeat_digits(prefix, num_repeats)
+      // Check if higher than upper, if so we can stop
+      use <- bool.guard(invalid_id > normalized_range.upper, list.Stop(acc))
+
+      // If in range, add it
+      case invalid_id >= normalized_range.lower {
+        True -> list.Continue([invalid_id, ..acc])
+        False -> list.Continue(acc)
+      }
+    })
+  })
+  |> list.unique
+}
+
+fn part_two(ranges: List(Range)) {
+  ranges
+  |> normalize_ranges
+  |> list.reverse
+  |> list.flat_map(get_invalid_ids_part_two)
+  |> int.sum
+}
 
 pub fn main() {
   let assert Ok(content) = simplifile.read("input/day02.txt")
@@ -99,4 +184,5 @@ pub fn main() {
     })
 
   io.println("Part 1: " <> int.to_string(part_one(ranges)))
+  io.println("Part 2: " <> int.to_string(part_two(ranges)))
 }

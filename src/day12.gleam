@@ -17,17 +17,17 @@ type RegionChallenge {
 
 fn part_one(shapes: Dict(Int, Shape), regions: Set(RegionChallenge)) -> Int {
   let trivially_possible =
-  regions
-  |> set.filter(fn(region) {
-    let area = { region.width / 3 * 3 } * { region.height / 3 * 3 }
-    let total_shape_area_upper_bound =
-      region.shape_counts
-      |> dict.values
-      |> list.map(fn(shape_count) { 3 * 3 * shape_count })
-      |> int.sum
+    regions
+    |> set.filter(fn(region) {
+      let area = { region.width / 3 * 3 } * { region.height / 3 * 3 }
+      let total_shape_area_upper_bound =
+        region.shape_counts
+        |> dict.values
+        |> list.map(fn(shape_count) { 3 * 3 * shape_count })
+        |> int.sum
 
-    total_shape_area_upper_bound <= area
-  })
+      total_shape_area_upper_bound <= area
+    })
 
   let trivially_impossible =
     regions
@@ -54,7 +54,7 @@ fn part_one(shapes: Dict(Int, Shape), regions: Set(RegionChallenge)) -> Int {
   use <- bool.guard(set.is_empty(hard_regions), set.size(trivially_possible))
 
   // Actually calculate hard_regions
-  todo
+  panic as "Uh oh, NP Hard!"
 }
 
 pub fn main() {
