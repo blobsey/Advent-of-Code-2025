@@ -8,7 +8,7 @@ import gleam/string
 import simplifile
 
 type Machine {
-  Machine(lights_target: Int, buttons: List(Int), joltages: List(Int))
+  Machine(lights_target: Int, buttons: List(Int))
 }
 
 fn part_one_process(
@@ -49,7 +49,6 @@ pub fn main() {
 
   let assert Ok(lights_regex) = regexp.from_string("\\[([#.]+)\\]")
   let assert Ok(buttons_regex) = regexp.from_string("\\(([^)]+)\\)")
-  let assert Ok(joltages_regex) = regexp.from_string("\\{([^}]+)\\}")
 
   let machines =
     content
@@ -58,7 +57,6 @@ pub fn main() {
     |> list.map(fn(line) {
       let lights_matches = regexp.scan(lights_regex, line)
       let button_matches = regexp.scan(buttons_regex, line)
-      let _joltages_matches = regexp.scan(joltages_regex, line)
 
       let assert [regexp.Match(submatches: [option.Some(lights_str)], ..)] =
         lights_matches
@@ -103,11 +101,7 @@ pub fn main() {
           bits
         })
 
-      Machine(
-        lights_target: lights_target,
-        buttons: buttons,
-        joltages: list.new(),
-      )
+      Machine(lights_target: lights_target, buttons: buttons)
     })
 
   io.println("Part 1 Answer: " <> int.to_string(part_one(machines)))
