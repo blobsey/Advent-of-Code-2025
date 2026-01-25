@@ -6,6 +6,7 @@ import gleam/list
 import gleam/set
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 type CacheKey {
   CacheKey(device: String, has_fft: Bool, has_dac: Bool)
@@ -83,7 +84,8 @@ fn part_one(device_to_outputs: dict.Dict(String, List(String))) {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day11.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day11.txt")
 
   let device_to_outputs: dict.Dict(String, List(String)) =
     content

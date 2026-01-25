@@ -1,3 +1,4 @@
+import gleam/erlang/application
 import gleam/int
 import gleam/io
 import gleam/list
@@ -14,6 +15,8 @@ type Machine {
 const glpsol_tmp_path = "/tmp/bruh.lp"
 
 fn part_two(machines: List(Machine)) -> Int {
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+
   machines
   |> list.map(fn(machine) {
     let minimize_section =
@@ -73,7 +76,7 @@ fn part_two(machines: List(Machine)) -> Int {
     let _ = simplifile.write(glpsol_tmp_path, lp_content)
     let assert Ok(output) =
       shellout.command(
-        run: "glpsol",
+        run: priv_dir <> "/glpsol",
         with: ["--lp", glpsol_tmp_path, "-o", "/dev/stdout"],
         in: ".",
         opt: [],
@@ -90,7 +93,8 @@ fn part_two(machines: List(Machine)) -> Int {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day10.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day10.txt")
 
   let assert Ok(buttons_regex) = regexp.from_string("\\(([^)]+)\\)")
   let assert Ok(joltages_regex) = regexp.from_string("\\{([^}]+)\\}")

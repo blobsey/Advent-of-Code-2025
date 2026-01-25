@@ -7,6 +7,7 @@ import gleam/result
 import gleam/set.{type Set}
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 type Shape =
   Set(#(Int, Int))
@@ -58,7 +59,8 @@ fn part_one(shapes: Dict(Int, Shape), regions: Set(RegionChallenge)) -> Int {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day12.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day12.txt")
 
   let chunks =
     content

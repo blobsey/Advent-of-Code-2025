@@ -5,6 +5,7 @@ import gleam/regexp
 import gleam/result
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 type Operator {
   Add
@@ -107,7 +108,8 @@ fn part_two(content: String) {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day06.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day06.txt")
 
   io.println("Part 1: " <> int.to_string(part_one(content)))
   io.println("Part 2: " <> int.to_string(part_two(content)))

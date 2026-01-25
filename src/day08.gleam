@@ -7,6 +7,7 @@ import gleam/option
 import gleam/result
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 type JunctionBox {
   JunctionBox(x: Int, y: Int, z: Int)
@@ -132,7 +133,8 @@ fn part_one(junction_boxes: List(JunctionBox)) {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day08.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day08.txt")
   let junction_boxes =
     content
     |> string.trim

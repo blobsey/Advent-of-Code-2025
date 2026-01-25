@@ -5,6 +5,7 @@ import gleam/io
 import gleam/list
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 type Range {
   Range(lower: Int, upper: Int)
@@ -171,7 +172,8 @@ fn part_two(ranges: List(Range)) {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day02.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day02.txt")
   let ranges =
     content
     |> string.trim

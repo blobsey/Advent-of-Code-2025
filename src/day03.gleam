@@ -4,6 +4,7 @@ import gleam/io
 import gleam/list
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 fn count_digits(n: Int) -> Int {
   case n >= 10 {
@@ -68,7 +69,8 @@ fn part_one(battery_banks: List(List(Int))) -> Int {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day03.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day03.txt")
 
   let assert Ok(battery_banks) =
     content

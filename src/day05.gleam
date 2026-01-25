@@ -4,6 +4,7 @@ import gleam/list
 import gleam/order
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 type Range {
   Range(lower: Int, upper: Int)
@@ -48,7 +49,8 @@ fn part_two(ranges: List(Range)) -> Int {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day05.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day05.txt")
   let assert [ranges_str, ids_str] = string.split(content, on: "\n\n")
 
   let ranges =

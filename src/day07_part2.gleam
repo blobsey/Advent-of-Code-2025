@@ -8,6 +8,7 @@ import gleam/result
 import gleam/set
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 type TimelineCount =
   Int
@@ -142,7 +143,8 @@ fn part_two(content: String) -> Int {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day07.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day07.txt")
   io.println("Part 2: " <> int.to_string(part_two(content)))
   Nil
 }

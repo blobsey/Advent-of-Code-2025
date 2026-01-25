@@ -3,6 +3,7 @@ import gleam/io
 import gleam/list
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 type Direction {
   Left
@@ -66,7 +67,8 @@ fn part_two(instructions: List(Instruction)) -> Nil {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day01.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day01.txt")
   let lines = content |> string.trim |> string.split(on: "\n")
   let instructions =
     lines

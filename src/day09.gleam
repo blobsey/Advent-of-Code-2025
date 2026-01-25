@@ -4,6 +4,7 @@ import gleam/list
 import gleam/result
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 /// Check if any line intersects with the bounding box created by corners
 fn is_valid(
@@ -78,7 +79,8 @@ fn part_one(tiles: List(#(Int, Int))) -> Int {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day09.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day09.txt")
   let tiles: List(#(Int, Int)) =
     content
     |> string.trim

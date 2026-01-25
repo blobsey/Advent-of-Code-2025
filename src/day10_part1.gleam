@@ -6,6 +6,7 @@ import gleam/regexp
 import gleam/set
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 type Machine {
   Machine(lights_target: Int, buttons: List(Int))
@@ -45,7 +46,8 @@ fn part_one(machines: List(Machine)) {
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day10.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day10.txt")
 
   let assert Ok(lights_regex) = regexp.from_string("\\[([#.]+)\\]")
   let assert Ok(buttons_regex) = regexp.from_string("\\(([^)]+)\\)")

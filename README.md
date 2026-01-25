@@ -1,8 +1,14 @@
 # Advent of Code 2025 
 
-In GLEAM!! And maybe python if I'm feeling lazy.
+In GLEAM!! Plus a little help from `glpsol`, hehehe.
 
-## Development
+## Installing
+
+1. Clone da repo
+2. `./install-gleam-al2023.sh`
+3. `./install-glpsol.sh`
+
+## Running
 
 ```sh
 gleam run -m day00

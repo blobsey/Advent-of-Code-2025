@@ -4,6 +4,7 @@ import gleam/list
 import gleam/set.{type Set}
 import gleam/string
 import simplifile
+import gleam/erlang/application
 
 fn part_one(rolls: Set(#(Int, Int))) -> Int {
   rolls
@@ -58,7 +59,8 @@ fn do_part_two(
 }
 
 pub fn main() {
-  let assert Ok(content) = simplifile.read("input/day04.txt")
+  let assert Ok(priv_dir) = application.priv_directory("advent_of_code_2025")
+  let assert Ok(content) = simplifile.read(priv_dir <> "/input/day04.txt")
   let rolls: Set(#(Int, Int)) =
     content
     |> string.trim
